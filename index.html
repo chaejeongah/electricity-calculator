@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025 전기세 계산기</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      padding: 2rem;
+      color: #333;
+      text-align: center;
+    }
+    .calculator {
+      background: #fff;
+      padding: 2rem;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: bold;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 1.5rem;
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>2025 전기세 계산기</h2>
+    <label for="kw">시간당 소비 전력량 (kWh)</label>
+    <input type="number" id="kw" step="0.01" placeholder="예: 0.8">
+
+    <label for="hours">하루 사용 시간 (시간)</label>
+    <input type="number" id="hours" step="0.1" placeholder="예: 8">
+
+    <button onclick="calculateBill()">전기세 계산</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateBill() {
+      const kw = parseFloat(document.getElementById('kw').value);
+      const hours = parseFloat(document.getElementById('hours').value);
+      if (isNaN(kw) || isNaN(hours)) {
+        document.getElementById('result').innerText = '값을 모두 입력해주세요.';
+        return;
+      }
+
+      const dailyUsage = kw * hours;
+      const monthlyUsage = dailyUsage * 30;
+      let bill = 0;
+
+      if (monthlyUsage <= 200) {
+        bill = monthlyUsage * 99.3;
+      } else if (monthlyUsage <= 400) {
+        bill = (200 * 99.3) + ((monthlyUsage - 200) * 194.3);
+      } else {
+        bill = (200 * 99.3) + (200 * 194.3) + ((monthlyUsage - 400) * 245.0);
+      }
+
+      const finalBill = bill * 1.137; // 부가세 및 전력기금 포함
+
+      document.getElementById('result').innerHTML =
+        `하루 전력 사용량: <strong>${dailyUsage.toFixed(2)} kWh</strong><br>
+        예상 전기요금: <strong>${Math.round(finalBill).toLocaleString()} 원</strong>`;
+    }
+  </script>
+</body>
+</html>
